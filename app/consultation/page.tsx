@@ -17,7 +17,7 @@ import { HeroBackground } from "@/components/hero-background"
 export default function ConsultationPage() {
   const { toast } = useToast()
   const [showPayPal, setShowPayPal] = useState(false)
-  const [selectedAmount, setSelectedAmount] = useState("99.00")
+  const [selectedAmount, setSelectedAmount] = useState("25.00")
   const [selectedCurrency, setSelectedCurrency] = useState("USD")
   const [isSubmitting, setIsSubmitting] = useState(false)
 
@@ -285,7 +285,7 @@ export default function ConsultationPage() {
                     value={selectedAmount}
                     onChange={(e) => setSelectedAmount(e.target.value)}
                   >
-                    <option value="99.00">30-45 Minutes Consultation $25.00 USD</option>
+                    <option value="25.00">30-45 Minutes Consultation $25.00 USD</option>
       
                   </select>
                 </div>

@@ -1,10 +1,10 @@
 import { type NextRequest, NextResponse } from "next/server"
+import nodemailer from "nodemailer"
 
 export async function POST(request: NextRequest) {
   try {
     const formData = await request.json()
 
-    // Create email content
     const emailContent = `
 New Consultation Request - PM Astrology
 
@@ -29,33 +29,37 @@ Submitted on: ${new Date().toLocaleString()}
 Please contact the client within 24 hours to schedule their consultation.
     `
 
-    // In a real application, you would use a service like:
-    // - Nodemailer with SMTP
-    // - SendGrid
-    // - Resend
-    // - AWS SES
+    // Debug environment variables
+    console.log("DEBUG - GMAIL_USER:", process.env.GMAIL_USER)
+    console.log("DEBUG - GMAIL_PASS:", process.env.GMAIL_PASS ? "[HIDDEN]" : "NOT SET")
+    console.log("DEBUG - TO_EMAIL:", process.env.TO_EMAIL)
 
-    // For now, we'll simulate sending the email
-    console.log("Email would be sent to: pmhoroscope@gmail.com")
-    console.log("Email content:", emailContent)
-
-    // Here you would integrate with your email service
-    // Example with a hypothetical email service:
-    /*
-    await emailService.send({
-      to: 'pmhoroscope@gmail.com',
-      subject: 'New Consultation Request - PM Astrology',
-      text: emailContent,
-      from: 'noreply@pmastrology.com'
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.GMAIL_USER,
+        pass: process.env.GMAIL_PASS,
+      },
     })
-    */
+
+    const mailOptions = {
+      from: `"PM Astrology" <${process.env.GMAIL_USER}>`,
+      to: process.env.TO_EMAIL,
+      subject: "New Consultation Request - PM Astrology",
+      text: emailContent,
+    }
+
+    await transporter.sendMail(mailOptions)
 
     return NextResponse.json({
       success: true,
-      message: "Consultation request submitted successfully",
+      message: "Consultation request submitted and email sent successfully",
     })
   } catch (error) {
-    console.error("Error processing consultation request:", error)
-    return NextResponse.json({ success: false, message: "Failed to submit consultation request" }, { status: 500 })
+    console.error("Error sending email:", error)
+    return NextResponse.json(
+      { success: false, message: "Failed to send email" },
+      { status: 500 }
+    )
   }
 }
