@@ -318,7 +318,7 @@ export default function ConsultationPage() {
                   <Image
                     src="/paypal-logo.jpg"
                     alt="PayPal - Secure Payment"
-                    width={120}
+                    width={140}
                     height={40}
                     className="h-10 w-auto object-contain"
                   />
