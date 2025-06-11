@@ -72,7 +72,7 @@ export default function ConsultationPage() {
       if (response.ok) {
         toast({
           title: "Form Submitted Successfully!",
-          description: "Your consultation request has been sent. We will contact you within 24 hours.",
+          description: "Your consultation request has been sent. We will contact you within 72 hours.",
         })
 
         // Reset form
@@ -316,7 +316,7 @@ export default function ConsultationPage() {
               <div className="flex justify-center">
                 <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
                   <Image
-                    src="/paypal-logo.png"
+                    src="/paypal-logo.jpg"
                     alt="PayPal - Secure Payment"
                     width={120}
                     height={40}
@@ -388,7 +388,7 @@ export default function ConsultationPage() {
               </li>
               <li className="text-gray-700 dark:text-gray-300">
                 <span className="font-medium text-purple-900 dark:text-purple-100">Schedule Your Call:</span> We will
-                contact you within 24 hours to schedule your consultation at a time convenient for you.
+                contact you within 72 hours to schedule your consultation at a time convenient for you.
               </li>
               <li className="text-gray-700 dark:text-gray-300">
                 <span className="font-medium text-purple-900 dark:text-purple-100">Prepare Your Questions:</span> Make a

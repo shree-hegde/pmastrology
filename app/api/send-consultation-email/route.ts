@@ -26,7 +26,7 @@ ${formData.questions || "No specific questions provided"}
 
 Submitted on: ${new Date().toLocaleString()}
 
-Please contact the client within 24 hours to schedule their consultation.
+Please contact the client within 72 hours to schedule their consultation.
     `
 
     // Debug environment variables
