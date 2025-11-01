@@ -82,6 +82,14 @@ export default function Home() {
                   Book a Consultation
                 </Button>
               </Link>
+               <Link href="/Kundali">
+                <Button
+                  size="lg"
+                  className="bg-gradient-to-r from-purple-500 to-purple-700 text-white hover:from-purple-600 hover:to-purple-800 dark:from-purple-600 dark:to-purple-900 text-base px-8 py-6"
+                >
+                  Order Kundali
+                </Button>
+              </Link>
               <Link href="/services">
                 <Button
                   variant="outline"
