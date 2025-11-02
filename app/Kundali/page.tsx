@@ -309,7 +309,38 @@ export default function KundaliReportPage() {
           </p>
 
           <div className="mt-12 grid gap-12 md:grid-cols-2">
-            {/* International Clients (PayPal) */}
+
+
+            {/* Indian Clients */}
+            <div className="rounded-lg border border-purple-100 dark:border-purple-800 bg-white dark:bg-gray-900 p-6 shadow-md">
+              <h2 className="mb-6 text-2xl font-bold text-purple-900 dark:text-purple-100">For Clients in India</h2>
+              <p className="mb-2 text-lg font-medium text-gray-800 dark:text-gray-200">
+                Pay via UPI (GPay, Paytm, PhonePe):
+              </p>
+              <div className="mb-4 p-3 bg-purple-50 dark:bg-purple-900/20 rounded-lg border">
+                <p className="text-purple-700 dark:text-purple-300 font-bold text-lg text-center">astrok@sbi</p>
+              </div>
+              <p className="text-center mb-4 text-gray-700 dark:text-gray-300 font-medium">
+                Detailed Kundali Report:{" "}
+                <span className="text-purple-700 dark:text-purple-300 font-bold">INR 200</span>
+              </p>
+              <div className="flex justify-center mb-4">
+                <Image
+                  src="/upi-qr-code.jpg"
+                  alt="UPI QR Code"
+                  width={200}
+                  height={200}
+                  className="rounded-lg"
+                />
+              </div>
+              <p className="text-sm text-gray-600 dark:text-gray-400 text-center">
+                Send payment screenshot to{" "}
+                <a href="mailto:pmhoroscope@gmail.com" className="text-purple-600 dark:text-purple-400 hover:underline">
+                  pmhoroscope@gmail.com
+                </a>
+              </p>
+            </div>
+                        {/* International Clients (PayPal) */}
             <div className="rounded-lg border border-purple-100 dark:border-purple-800 bg-white dark:bg-gray-900 p-6 shadow-md">
               <h2 className="mb-6 text-2xl font-bold text-purple-900 dark:text-purple-100">
                 For International Clients
@@ -354,36 +385,6 @@ export default function KundaliReportPage() {
                   className="object-contain"
                 />
               </div>
-            </div>
-
-            {/* Indian Clients */}
-            <div className="rounded-lg border border-purple-100 dark:border-purple-800 bg-white dark:bg-gray-900 p-6 shadow-md">
-              <h2 className="mb-6 text-2xl font-bold text-purple-900 dark:text-purple-100">For Clients in India</h2>
-              <p className="mb-2 text-lg font-medium text-gray-800 dark:text-gray-200">
-                Pay via UPI (GPay, Paytm, PhonePe):
-              </p>
-              <div className="mb-4 p-3 bg-purple-50 dark:bg-purple-900/20 rounded-lg border">
-                <p className="text-purple-700 dark:text-purple-300 font-bold text-lg text-center">astrok@sbi</p>
-              </div>
-              <p className="text-center mb-4 text-gray-700 dark:text-gray-300 font-medium">
-                Detailed Kundali Report:{" "}
-                <span className="text-purple-700 dark:text-purple-300 font-bold">INR 200</span>
-              </p>
-              <div className="flex justify-center mb-4">
-                <Image
-                  src="/upi-qr-code.jpg"
-                  alt="UPI QR Code"
-                  width={200}
-                  height={200}
-                  className="rounded-lg"
-                />
-              </div>
-              <p className="text-sm text-gray-600 dark:text-gray-400 text-center">
-                Send payment screenshot to{" "}
-                <a href="mailto:pmhoroscope@gmail.com" className="text-purple-600 dark:text-purple-400 hover:underline">
-                  pmhoroscope@gmail.com
-                </a>
-              </p>
             </div>
           </div>
 

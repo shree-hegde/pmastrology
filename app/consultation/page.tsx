@@ -302,7 +302,51 @@ export default function ConsultationPage() {
           </p>
 
           <div className="mt-12 grid gap-12 md:grid-cols-2">
-            {/* International Clients */}
+ 
+
+            {/* Indian Clients */}
+            <div className="rounded-lg border border-purple-100 dark:border-purple-800 bg-white dark:bg-gray-900 p-6 shadow-md">
+              <h2 className="mb-6 text-2xl font-bold text-purple-900 dark:text-purple-100">For Clients In India</h2>
+              <div className="mb-6">
+                <p className="mb-2 text-lg font-medium text-gray-800 dark:text-gray-200">
+                  Transfer Using UPI ID (GPay, Paytm, PhonePe, YONO SBI):
+                </p>
+                <div className="mb-4 p-3 bg-purple-50 dark:bg-purple-900/20 rounded-lg border border-purple-200 dark:border-purple-800">
+                  <p className="text-purple-700 dark:text-purple-300 font-bold text-lg text-center">astrok@sbi</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 text-center mt-1">
+                    Copy this UPI ID for payment
+                  </p>
+                </div>
+                <p className="mb-6 text-gray-700 dark:text-gray-300 text-center font-medium">
+                  30-45 Minutes Phone Consultation:{" "}
+                  <span className="text-purple-700 dark:text-purple-300 font-bold">INR 1,500</span>
+                </p>
+                <div className="flex justify-center mb-4">
+                  <div className="p-4 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm">
+                    <Image
+                      src="/upi-qr-code.jpg"
+                      alt="UPI QR Code for Payment"
+                      width={200}
+                      height={200}
+                      className="rounded-lg"
+                    />
+                    <p className="text-sm text-gray-600 dark:text-gray-400 text-center mt-2">Scan QR code to pay</p>
+                  </div>
+                </div>
+                <div className="text-center">
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    After payment, please send a screenshot to{" "}
+                    <a
+                      href="mailto:pmhoroscope@gmail.com"
+                      className="text-purple-600 dark:text-purple-400 hover:underline"
+                    >
+                      pmhoroscope@gmail.com
+                    </a>
+                  </p>
+                </div>
+              </div>
+            </div>
+                       {/* International Clients */}
             <div className="rounded-lg border border-purple-100 dark:border-purple-800 bg-white dark:bg-gray-900 p-6 shadow-md">
               <h2 className="mb-6 text-2xl font-bold text-purple-900 dark:text-purple-100">
                 For International Clients
@@ -358,49 +402,6 @@ export default function ConsultationPage() {
                 <p className="text-sm text-gray-600 dark:text-gray-400">
                   PayPal accepts all major credit cards and debit cards worldwide
                 </p>
-              </div>
-            </div>
-
-            {/* Indian Clients */}
-            <div className="rounded-lg border border-purple-100 dark:border-purple-800 bg-white dark:bg-gray-900 p-6 shadow-md">
-              <h2 className="mb-6 text-2xl font-bold text-purple-900 dark:text-purple-100">For Clients In India</h2>
-              <div className="mb-6">
-                <p className="mb-2 text-lg font-medium text-gray-800 dark:text-gray-200">
-                  Transfer Using UPI ID (GPay, Paytm, PhonePe, YONO SBI):
-                </p>
-                <div className="mb-4 p-3 bg-purple-50 dark:bg-purple-900/20 rounded-lg border border-purple-200 dark:border-purple-800">
-                  <p className="text-purple-700 dark:text-purple-300 font-bold text-lg text-center">astrok@sbi</p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400 text-center mt-1">
-                    Copy this UPI ID for payment
-                  </p>
-                </div>
-                <p className="mb-6 text-gray-700 dark:text-gray-300 text-center font-medium">
-                  30-45 Minutes Phone Consultation:{" "}
-                  <span className="text-purple-700 dark:text-purple-300 font-bold">INR 1,500</span>
-                </p>
-                <div className="flex justify-center mb-4">
-                  <div className="p-4 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm">
-                    <Image
-                      src="/upi-qr-code.jpg"
-                      alt="UPI QR Code for Payment"
-                      width={200}
-                      height={200}
-                      className="rounded-lg"
-                    />
-                    <p className="text-sm text-gray-600 dark:text-gray-400 text-center mt-2">Scan QR code to pay</p>
-                  </div>
-                </div>
-                <div className="text-center">
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    After payment, please send a screenshot to{" "}
-                    <a
-                      href="mailto:pmhoroscope@gmail.com"
-                      className="text-purple-600 dark:text-purple-400 hover:underline"
-                    >
-                      pmhoroscope@gmail.com
-                    </a>
-                  </p>
-                </div>
               </div>
             </div>
           </div>
