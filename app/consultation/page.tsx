@@ -259,7 +259,7 @@ export default function ConsultationPage() {
                   {/* Payment Screenshot Upload */}
                   <div className="space-y-2">
                     <label htmlFor="payment-screenshot" className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                      Payment Screenshot (Optional)
+                      Payment Screenshot 
                     </label>
                     <Input
                       id="payment-screenshot"
