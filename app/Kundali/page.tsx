@@ -16,7 +16,7 @@ import { HeroBackground } from "@/components/hero-background"
 export default function KundaliReportPage() {
   const { toast } = useToast()
   const [showPayPal, setShowPayPal] = useState(false)
-  const [selectedAmount, setSelectedAmount] = useState("15.00")
+  const [selectedAmount, setSelectedAmount] = useState("5.00")
   const [selectedCurrency, setSelectedCurrency] = useState("USD")
   const [isSubmitting, setIsSubmitting] = useState(false)
 
@@ -31,6 +31,8 @@ export default function KundaliReportPage() {
     birthPlace: "",
     additionalNotes: "",
   })
+
+  const [paymentScreenshot, setPaymentScreenshot] = useState<File | null>(null)
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { id, value } = e.target
@@ -54,55 +56,90 @@ export default function KundaliReportPage() {
     }
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsSubmitting(true)
-
-    try {
-      const response = await fetch("/api/send-kundali-email", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      })
-
-      if (response.ok) {
-        toast({
-          title: "Request Submitted Successfully!",
-          description: "Your Kundali report request has been sent. You’ll receive your report via email within 5–7 days.",
-        })
-
-        setFormData({
-          firstName: "",
-          lastName: "",
-          email: "",
-          phone: "",
-          birthDate: "",
-          birthTime: "",
-          birthPlace: "",
-          additionalNotes: "",
-        })
-      } else {
-        throw new Error("Failed to send email")
-      }
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to submit request. Please try again or contact us directly.",
-        variant: "destructive",
-      })
-    } finally {
-      setIsSubmitting(false)
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setPaymentScreenshot(e.target.files[0])
     }
   }
 
+  const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault()
+
+  // Check if payment screenshot is uploaded
+  if (!paymentScreenshot) {
+    toast({
+      title: "Payment Screenshot Required",
+      description: "Please upload your payment screenshot to proceed.",
+      variant: "destructive",
+    })
+    return
+  }
+
+  setIsSubmitting(true)
+
+  try {
+    // Format birth date to DD-MM-YYYY
+    let formattedDate = formData.birthDate
+    if (formattedDate) {
+      const [year, month, day] = formattedDate.split("-")
+      formattedDate = `${day}-${month}-${year}`
+    }
+
+    const dataToSend = new FormData()
+    dataToSend.append("firstName", formData.firstName)
+    dataToSend.append("lastName", formData.lastName)
+    dataToSend.append("email", formData.email)
+    dataToSend.append("phone", formData.phone)
+    dataToSend.append("birthDate", formattedDate)
+    dataToSend.append("birthTime", formData.birthTime)
+    dataToSend.append("birthPlace", formData.birthPlace)
+    dataToSend.append("additionalNotes", formData.additionalNotes)
+    dataToSend.append("paymentScreenshot", paymentScreenshot)
+
+    const response = await fetch("/api/send-kundali-email", {
+      method: "POST",
+      body: dataToSend,
+    })
+
+    if (response.ok) {
+      toast({
+        title: "Request Submitted Successfully!",
+        description: "Your Kundali report request has been sent. You’ll receive your report via email within 48 hours.",
+      })
+
+      setFormData({
+        firstName: "",
+        lastName: "",
+        email: "",
+        phone: "",
+        birthDate: "",
+        birthTime: "",
+        birthPlace: "",
+        additionalNotes: "",
+      })
+      setPaymentScreenshot(null)
+    } else {
+      throw new Error("Failed to send email")
+    }
+  } catch (error) {
+    toast({
+      title: "Error",
+      description: "Failed to submit request. Please try again or contact us directly.",
+      variant: "destructive",
+    })
+  } finally {
+    setIsSubmitting(false)
+  }
+}
+
   const handlePaymentSuccess = (details: any) => {
     toast({
-      title: "Payment Successful!",
-      description: "Thank you for your purchase. Your detailed Kundali report will be emailed to you shortly.",
+      title: "Kundali Booked!",
+      description:
+        "Your Kundali is booked , we will mail you them shortly.",
     })
   }
+
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-950">
@@ -110,7 +147,7 @@ export default function KundaliReportPage() {
 
       <HeroBackground
         title="ORDER YOUR KUNDALI & DETAILED ASTRO REPORT"
-        description="Get your personalized Kundali chart and detailed life predictions prepared by expert astrologers"
+        description="Get your personalized Computer generated Kundali chart with complete detailed dasha sequence and all yogas just for 200 rs"
       />
 
       <main className="container px-4 py-12 md:px-6 md:py-16">
@@ -230,6 +267,19 @@ export default function KundaliReportPage() {
                     />
                   </div> */}
 
+                  <div className="space-y-2">
+                    <label htmlFor="payment-screenshot" className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                      Payment Screenshot <span className="text-red-500">*</span>
+                    </label>
+                    <Input
+                      id="payment-screenshot"
+                      type="file"
+                      accept="image/*"
+                      onChange={handleFileChange}
+                      required
+                    />
+                  </div>
+
                   <div className="text-center">
                     <Button
                       type="submit"
@@ -239,7 +289,7 @@ export default function KundaliReportPage() {
                       {isSubmitting ? "Submitting..." : "Submit Request"}
                     </Button>
                     <p className="text-sm text-gray-600 dark:text-gray-400 mt-4">
-                      You’ll receive your report within 5–7 days via email after successful payment.
+                      You’ll receive your report within 48 hours via email after successful payment.
                     </p>
                   </div>
                 </form>
@@ -259,7 +309,7 @@ export default function KundaliReportPage() {
           </p>
 
           <div className="mt-12 grid gap-12 md:grid-cols-2">
-            {/* International Clients
+            {/* International Clients (PayPal) */}
             <div className="rounded-lg border border-purple-100 dark:border-purple-800 bg-white dark:bg-gray-900 p-6 shadow-md">
               <h2 className="mb-6 text-2xl font-bold text-purple-900 dark:text-purple-100">
                 For International Clients
@@ -274,7 +324,7 @@ export default function KundaliReportPage() {
                     value={selectedAmount}
                     onChange={(e) => setSelectedAmount(e.target.value)}
                   >
-                    <option value="15.00">Detailed Kundali Report $15.00 USD</option>
+                    <option value="5.00">Detailed Kundali Report $5.00 USD</option>
                   </select>
                 </div>
 
@@ -304,7 +354,7 @@ export default function KundaliReportPage() {
                   className="object-contain"
                 />
               </div>
-            </div> */}
+            </div>
 
             {/* Indian Clients */}
             <div className="rounded-lg border border-purple-100 dark:border-purple-800 bg-white dark:bg-gray-900 p-6 shadow-md">
@@ -317,7 +367,7 @@ export default function KundaliReportPage() {
               </div>
               <p className="text-center mb-4 text-gray-700 dark:text-gray-300 font-medium">
                 Detailed Kundali Report:{" "}
-                <span className="text-purple-700 dark:text-purple-300 font-bold">INR 150</span>
+                <span className="text-purple-700 dark:text-purple-300 font-bold">INR 200</span>
               </p>
               <div className="flex justify-center mb-4">
                 <Image

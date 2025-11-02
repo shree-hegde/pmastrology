@@ -1,7 +1,6 @@
 "use client"
 
 import type React from "react"
-
 import { useState } from "react"
 import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
@@ -31,42 +30,66 @@ export default function ConsultationPage() {
     birthTime: "",
     birthPlace: "",
     questions: "",
+    paymentScreenshot: null as File | null, // new field
   })
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-  const { id, value } = e.target
-  const fieldMap: { [key: string]: string } = {
-    "first-name": "firstName",
-    "last-name": "lastName",
-    "email": "email",
-    "phone": "phone",
-    "birth-date": "birthDate",
-    "birth-time": "birthTime",
-    "birth-place": "birthPlace",
-    "questions": "questions",
+    const { id, value } = e.target
+    const fieldMap: { [key: string]: string } = {
+      "first-name": "firstName",
+      "last-name": "lastName",
+      "email": "email",
+      "phone": "phone",
+      "birth-date": "birthDate",
+      "birth-time": "birthTime",
+      "birth-place": "birthPlace",
+      "questions": "questions",
+    }
+
+    const field = fieldMap[id]
+    if (field) {
+      setFormData((prev) => ({
+        ...prev,
+        [field]: value,
+      }))
+    }
   }
 
-  const field = fieldMap[id]
-  if (field) {
-    setFormData((prev) => ({
-      ...prev,
-      [field]: value,
-    }))
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setFormData((prev) => ({
+        ...prev,
+        paymentScreenshot: e.target.files![0],
+      }))
+    }
   }
-}
-
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
 
     try {
+      // Format birth date DD-MM-YYYY
+      const formattedData = {
+        ...formData,
+        birthDate: formData.birthDate
+          ? formData.birthDate.split("-").reverse().join("-")
+          : "",
+      }
+
+      // Create FormData to handle file upload
+      const body = new FormData()
+      Object.entries(formattedData).forEach(([key, value]) => {
+        if (key === "paymentScreenshot" && value) {
+          body.append(key, value)
+        } else {
+          body.append(key, value as string)
+        }
+      })
+
       const response = await fetch("/api/send-consultation-email", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
+        body,
       })
 
       if (response.ok) {
@@ -85,6 +108,7 @@ export default function ConsultationPage() {
           birthTime: "",
           birthPlace: "",
           questions: "",
+          paymentScreenshot: null,
         })
       } else {
         throw new Error("Failed to send email")
@@ -106,10 +130,6 @@ export default function ConsultationPage() {
       description:
         "Your consultation has been booked successfully. We will contact you shortly to schedule your session.",
     })
-    // In a real application, you would:
-    // 1. Update your database
-    // 2. Send confirmation email
-    // 3. Redirect to a thank you page
   }
 
   return (
@@ -123,11 +143,13 @@ export default function ConsultationPage() {
 
       <main className="container px-4 py-12 md:px-6 md:py-16">
         <div className="mx-auto max-w-6xl">
+          {/* Consultation Form */}
           <div className="mb-16 rounded-lg overflow-hidden shadow-lg border border-purple-100 dark:border-purple-800">
             <div className="bg-gradient-to-r from-purple-600 via-purple-500 to-amber-500 p-6 text-white">
               <h2 className="text-3xl font-bold text-center">Submit Request For Consultation</h2>
               <p className="text-center mt-2 opacity-90">Please provide your details for the consultation</p>
             </div>
+
             <div className="bg-white dark:bg-gray-900 p-8">
               <div className="max-w-3xl mx-auto">
                 <form onSubmit={handleSubmit} className="space-y-6">
@@ -141,10 +163,10 @@ export default function ConsultationPage() {
                         value={formData.firstName}
                         onChange={handleInputChange}
                         placeholder="Enter your first name"
-                        className="border-purple-100 dark:border-purple-800 focus:border-purple-300 dark:focus:border-purple-700 dark:bg-gray-800 dark:text-white"
                         required
                       />
                     </div>
+
                     <div className="space-y-2">
                       <label htmlFor="last-name" className="text-sm font-medium text-gray-700 dark:text-gray-300">
                         Last Name
@@ -154,7 +176,6 @@ export default function ConsultationPage() {
                         value={formData.lastName}
                         onChange={handleInputChange}
                         placeholder="Enter your last name"
-                        className="border-purple-100 dark:border-purple-800 focus:border-purple-300 dark:focus:border-purple-700 dark:bg-gray-800 dark:text-white"
                       />
                     </div>
                   </div>
@@ -169,7 +190,6 @@ export default function ConsultationPage() {
                       value={formData.email}
                       onChange={handleInputChange}
                       placeholder="Enter your email"
-                      className="border-purple-100 dark:border-purple-800 focus:border-purple-300 dark:focus:border-purple-700 dark:bg-gray-800 dark:text-white"
                       required
                     />
                   </div>
@@ -184,7 +204,6 @@ export default function ConsultationPage() {
                       value={formData.phone}
                       onChange={handleInputChange}
                       placeholder="Enter your phone number"
-                      className="border-purple-100 dark:border-purple-800 focus:border-purple-300 dark:focus:border-purple-700 dark:bg-gray-800 dark:text-white"
                     />
                   </div>
 
@@ -198,7 +217,6 @@ export default function ConsultationPage() {
                         type="date"
                         value={formData.birthDate}
                         onChange={handleInputChange}
-                        className="border-purple-100 dark:border-purple-800 focus:border-purple-300 dark:focus:border-purple-700 dark:bg-gray-800 dark:text-white"
                       />
                     </div>
                     <div className="space-y-2">
@@ -210,7 +228,6 @@ export default function ConsultationPage() {
                         type="time"
                         value={formData.birthTime}
                         onChange={handleInputChange}
-                        className="border-purple-100 dark:border-purple-800 focus:border-purple-300 dark:focus:border-purple-700 dark:bg-gray-800 dark:text-white"
                       />
                     </div>
                     <div className="space-y-2">
@@ -222,7 +239,6 @@ export default function ConsultationPage() {
                         value={formData.birthPlace}
                         onChange={handleInputChange}
                         placeholder="City, Country"
-                        className="border-purple-100 dark:border-purple-800 focus:border-purple-300 dark:focus:border-purple-700 dark:bg-gray-800 dark:text-white"
                       />
                     </div>
                   </div>
@@ -236,7 +252,20 @@ export default function ConsultationPage() {
                       value={formData.questions}
                       onChange={handleInputChange}
                       placeholder="Please describe what you'd like to discuss during your consultation..."
-                      className="min-h-[120px] border-purple-100 dark:border-purple-800 focus:border-purple-300 dark:focus:border-purple-700 dark:bg-gray-800 dark:text-white"
+                      className="min-h-[120px]"
+                    />
+                  </div>
+
+                  {/* Payment Screenshot Upload */}
+                  <div className="space-y-2">
+                    <label htmlFor="payment-screenshot" className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                      Payment Screenshot (Optional)
+                    </label>
+                    <Input
+                      id="payment-screenshot"
+                      type="file"
+                      accept="image/*"
+                      onChange={handleFileChange}
                     />
                   </div>
 
@@ -244,7 +273,7 @@ export default function ConsultationPage() {
                     <Button
                       type="submit"
                       disabled={isSubmitting}
-                      className="bg-gradient-to-r from-purple-500 to-purple-700 text-white hover:from-purple-600 hover:to-purple-800 dark:from-purple-600 dark:to-purple-900 px-8 py-3 text-lg"
+                      className="bg-gradient-to-r from-purple-500 to-purple-700 text-white hover:from-purple-600 hover:to-purple-800 px-8 py-3 text-lg"
                     >
                       {isSubmitting ? "Submitting..." : "Submit Consultation Request"}
                     </Button>
@@ -257,6 +286,10 @@ export default function ConsultationPage() {
             </div>
           </div>
 
+          {/* ----------------------- */}
+          {/* Keep all sections below exactly as your original code */}
+          {/* UPI & PayPal sections, How It Works, steps, buttons, images */}
+          {/* ----------------------- */}
           <h1 className="mb-4 text-3xl font-bold tracking-tight text-red-800 dark:text-red-400 md:text-4xl">
             30-45 MINUTES CONSULTATION VIA PHONE
           </h1>
@@ -268,11 +301,8 @@ export default function ConsultationPage() {
             questions based on your Birth Chart and Current Transits.
           </p>
 
-          <div className="mb-8 p-4 bg-amber-50 dark:bg-amber-900/20 rounded-lg border border-amber-100 dark:border-amber-900/50">
-            
-          </div>
-
           <div className="mt-12 grid gap-12 md:grid-cols-2">
+            {/* International Clients */}
             <div className="rounded-lg border border-purple-100 dark:border-purple-800 bg-white dark:bg-gray-900 p-6 shadow-md">
               <h2 className="mb-6 text-2xl font-bold text-purple-900 dark:text-purple-100">
                 For International Clients
@@ -286,12 +316,11 @@ export default function ConsultationPage() {
                     onChange={(e) => setSelectedAmount(e.target.value)}
                   >
                     <option value="25.00">30-45 Minutes Consultation $25.00 USD</option>
-      
                   </select>
                 </div>
                 {!showPayPal ? (
                   <Button
-                    className="w-full bg-gradient-to-r from-purple-500 to-purple-700 text-white hover:from-purple-600 hover:to-purple-800 dark:from-purple-600 dark:to-purple-900 mb-4"
+                    className="w-full bg-gradient-to-r from-purple-500 to-purple-700 text-white hover:from-purple-600 hover:to-purple-800 mb-4"
                     onClick={() => setShowPayPal(true)}
                   >
                     Pay with PayPal
@@ -332,6 +361,7 @@ export default function ConsultationPage() {
               </div>
             </div>
 
+            {/* Indian Clients */}
             <div className="rounded-lg border border-purple-100 dark:border-purple-800 bg-white dark:bg-gray-900 p-6 shadow-md">
               <h2 className="mb-6 text-2xl font-bold text-purple-900 dark:text-purple-100">For Clients In India</h2>
               <div className="mb-6">
@@ -375,6 +405,7 @@ export default function ConsultationPage() {
             </div>
           </div>
 
+          {/* How It Works */}
           <div className="mt-12 rounded-lg border border-purple-100 dark:border-purple-800 bg-white dark:bg-gray-900 p-6 shadow-md">
             <h2 className="mb-6 text-2xl font-bold text-purple-900 dark:text-purple-100">How It Works</h2>
             <ol className="space-y-4 list-decimal list-inside">
@@ -401,6 +432,7 @@ export default function ConsultationPage() {
             </ol>
           </div>
 
+          {/* Final Book Button */}
           <div className="mt-12 text-center">
             <Button
               className="bg-gradient-to-r from-purple-500 to-purple-700 text-white hover:from-purple-600 hover:to-purple-800 dark:from-purple-600 dark:to-purple-900 px-8 py-6 text-lg"
