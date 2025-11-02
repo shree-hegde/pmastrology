@@ -1,64 +1,75 @@
-import { type NextRequest, NextResponse } from "next/server"
+import { NextResponse } from "next/server"
 import nodemailer from "nodemailer"
 
-export async function POST(request: NextRequest) {
+export async function POST(request: Request) {
   try {
-    const formData = await request.json()
+    // 1️⃣ Parse form data (works for file uploads)
+    const formData = await request.formData()
 
-    const emailContent = `
-New Consultation Request - PM Astrology
+    const firstName = formData.get("firstName") as string
+    const lastName = formData.get("lastName") as string
+    const email = formData.get("email") as string
+    const phone = formData.get("phone") as string
+    const birthDate = formData.get("birthDate") as string
+    const birthTime = formData.get("birthTime") as string
+    const birthPlace = formData.get("birthPlace") as string
+    const questions = formData.get("questions") as string
+    const paymentScreenshot = formData.get("paymentScreenshot") as File | null
 
-Client Details:
-================
-Name: ${formData.firstName} ${formData.lastName}
-Email: ${formData.email}
-Phone: ${formData.phone || "Not provided"}
+    // 2️⃣ Prepare email text
+    const message = `
+New Consultation/Kundali Request:
 
-Birth Information:
-==================
-Birth Date: ${formData.birthDate || "Not provided"}
-Birth Time: ${formData.birthTime || "Not provided"}
-Birth Place: ${formData.birthPlace || "Not provided"}
+Name: ${firstName} ${lastName}
+Email: ${email}
+Phone: ${phone}
 
-Questions/Areas of Interest:
-============================
-${formData.questions || "No specific questions provided"}
+Birth Details:
+- Date: ${birthDate}
+- Time: ${birthTime}
+- Place: ${birthPlace}
 
-Submitted on: ${new Date().toLocaleString()}
-
-Please contact the client within 72 hours to schedule their consultation.
+Questions / Notes:
+${questions || "N/A"}
     `
 
-    // Debug environment variables
-    console.log("DEBUG - GMAIL_USER:", process.env.GMAIL_USER)
-    console.log("DEBUG - GMAIL_PASS:", process.env.GMAIL_PASS ? "[HIDDEN]" : "NOT SET")
-    console.log("DEBUG - TO_EMAIL:", process.env.TO_EMAIL)
-
+    // 3️⃣ Configure transporter
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
-        user: process.env.GMAIL_USER,
-        pass: process.env.GMAIL_PASS,
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
       },
     })
 
-    const mailOptions = {
-      from: `"PM Astrology" <${process.env.GMAIL_USER}>`,
-      to: process.env.TO_EMAIL,
-      subject: "New Consultation Request - PM Astrology",
-      text: emailContent,
+    // 4️⃣ Create mail options
+    const mailOptions: any = {
+      from: process.env.EMAIL_USER,
+      to: process.env.CONTACT_EMAIL,
+      subject: "🪐 New Consultation / Kundali Request",
+      text: message,
     }
 
+    // 5️⃣ If payment screenshot is attached, convert to Buffer & attach
+    if (paymentScreenshot) {
+      const arrayBuffer = await paymentScreenshot.arrayBuffer()
+      const buffer = Buffer.from(arrayBuffer)
+      mailOptions.attachments = [
+        {
+          filename: paymentScreenshot.name,
+          content: buffer,
+        },
+      ]
+    }
+
+    // 6️⃣ Send email
     await transporter.sendMail(mailOptions)
 
-    return NextResponse.json({
-      success: true,
-      message: "Consultation request submitted and email sent successfully",
-    })
-  } catch (error) {
-    console.error("Error sending email:", error)
+    return NextResponse.json({ success: true, message: "Email sent successfully!" })
+  } catch (error: any) {
+    console.error("❌ Error sending email:", error)
     return NextResponse.json(
-      { success: false, message: "Failed to send email" },
+      { success: false, message: "Failed to send email", error: error.message },
       { status: 500 }
     )
   }
