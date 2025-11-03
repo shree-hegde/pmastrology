@@ -18,7 +18,7 @@ export async function POST(request: Request) {
 
     // 2️⃣ Prepare email text
     const message = `
-New Consultation Request:
+New Kundali Request:
 
 Name: ${firstName} ${lastName}
 Email: ${email}
@@ -46,7 +46,7 @@ ${questions || "N/A"}
     const mailOptions: any = {
       from: process.env.EMAIL_USER,
       to: process.env.CONTACT_EMAIL,
-      subject: "🪐 New Consultation Request",
+      subject: "🪐 New Kundali Request",
       text: message,
     }
 
