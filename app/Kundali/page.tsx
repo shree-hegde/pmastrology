@@ -16,7 +16,7 @@ import { HeroBackground } from "@/components/hero-background"
 export default function KundaliReportPage() {
   const { toast } = useToast()
   const [showPayPal, setShowPayPal] = useState(false)
-  const [selectedAmount, setSelectedAmount] = useState("5.00")
+  const [selectedAmount, setSelectedAmount] = useState("4.00")
   const [selectedCurrency, setSelectedCurrency] = useState("USD")
   const [isSubmitting, setIsSubmitting] = useState(false)
 
@@ -96,7 +96,7 @@ export default function KundaliReportPage() {
     dataToSend.append("additionalNotes", formData.additionalNotes)
     dataToSend.append("paymentScreenshot", paymentScreenshot)
 
-    const response = await fetch("/api/send-kundali-email", {
+    const response = await fetch("/api/send-consultation-email", {
       method: "POST",
       body: dataToSend,
     })
@@ -147,7 +147,7 @@ export default function KundaliReportPage() {
 
       <HeroBackground
         title="ORDER YOUR KUNDALI & DETAILED ASTRO REPORT"
-        description="Get your personalized Computer generated Kundali chart with complete detailed dasha sequence and all yogas just for 200 rs"
+        description="Get your personalized Computer generated Kundali / Horoscope chart with complete detailed dasha sequence and all yogas just for 200 rupees"
       />
 
       <main className="container px-4 py-12 md:px-6 md:py-16">
@@ -299,7 +299,7 @@ export default function KundaliReportPage() {
 
           {/* Payment Section */}
           <h1 className="mb-4 text-3xl font-bold tracking-tight text-red-800 dark:text-red-400 md:text-4xl">
-            Personalized Online Kundali Report
+            Personalized Online Kundali / Horoscope Report
           </h1>
           <p className="mb-2 text-xl font-medium text-purple-700 dark:text-purple-300">
             Get Your Horoscope & Detailed Life Report
@@ -355,7 +355,7 @@ export default function KundaliReportPage() {
                     value={selectedAmount}
                     onChange={(e) => setSelectedAmount(e.target.value)}
                   >
-                    <option value="5.00">Detailed Kundali Report $5.00 USD</option>
+                    <option value="4.00">Detailed Kundali Report $4.00 USD</option>
                   </select>
                 </div>
 
